@@ -1,0 +1,89 @@
+<?php
+/**
+ * @file
+ * Hook implementations and callbacks for the ThinkShout Math page.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ts_math_menu() {
+  $items = array();
+
+  $items['thinkshout-math'] = array(
+    'title' => 'ThinkShout Math',
+    'page callback' => 'ts_math_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => 50,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for ThinkShout Math page.
+ */
+function ts_math_page() {
+  $form = drupal_get_form('ts_math_form');
+  return $form;
+}
+
+/**
+ * Form callback for generating the form.
+ */
+function ts_math_form($form, &$form_state) {
+  $form['number_1'] = array(
+    '#type' => 'textfield',
+    '#size' => 10,
+    '#title' => t('Number 1'),
+  );
+  $form['operation'] = array(
+    '#type' => 'markup',
+    '#markup' => '+',
+  );
+  $form['number_2'] = array(
+    '#type' => 'textfield',
+    '#size' => 10,
+    '#title' => t('Number 2'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Equals'),
+  );
+
+  return $form;
+}
+
+/**
+ * Validation callback for ThinkShout Math form.
+ */
+function ts_math_form_validate($form, &$form_state) {
+  $number_1 = $form_state['values']['number_1'];
+  $number_2 = $form_state['values']['number_2'];
+  if (!is_numeric($number_1)) {
+    form_set_error('number_1', 'Number 1 was not a number.');
+  }
+  if (!is_numeric($number_2)) {
+    form_set_error('number_2', 'Number 2 was not a number.');
+  }
+}
+
+/**
+ * Submit callback for ThinkShout Math form.
+ */
+function ts_math_form_submit($form, &$form_state) {
+  $number_1 = $form_state['values']['number_1'];
+  $number_2 = $form_state['values']['number_2'];
+  $sum = $number_1 + $number_2;
+  $message = t(
+    '@number_1 + @number_2 = @sum.',
+    array(
+      '@number_1' => $number_1,
+      '@number_2' => $number_2,
+      '@sum' => $sum,
+    )
+  );
+  drupal_set_message($message);
+}

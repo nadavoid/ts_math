@@ -1,0 +1,4 @@
+name = ThinkShout Math
+description = Add two numbers together.
+package = ThinkShout
+core = 7.x
